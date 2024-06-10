@@ -26,6 +26,14 @@ defined('MOODLE_INTERNAL') || die();
 
 require($CFG->dirroot . '/local/eportfolio/locallib.php');
 
+
+/**
+ * Block eportfolio is defined here.
+ *
+ * @package     block_eportfolio
+ * @copyright   2023 weQon UG <support@weqon.net>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class block_eportfolio extends block_base {
 
     /**
@@ -36,6 +44,11 @@ class block_eportfolio extends block_base {
         $this->title = get_string('pluginname', 'block_eportfolio');
     }
 
+    /**
+     * Returns the block config.
+     *
+     * @return bool
+     */
     public function has_config() {
         return false;
     }
@@ -89,13 +102,13 @@ class block_eportfolio extends block_base {
                 // ToDo: Use mustache templates instead.
                 if (!empty($mysharedeportfolios)) {
                     $this->content->text .= html_writer::tag('h6', get_string('header:mysharedeportfolios', 'block_eportfolio'),
-                            array('class' => 'mb-3'));
+                            ['class' => 'mb-3']);
 
                     foreach ($mysharedeportfolios as $eport) {
-                        $this->content->text .= html_writer::start_tag('p', array('class' => 'pl-2'));
-                        $this->content->text .= html_writer::tag('i', '', array('class' => 'fa fa-search mr-1'));
+                        $this->content->text .= html_writer::start_tag('p', ['class' => 'pl-2']);
+                        $this->content->text .= html_writer::tag('i', '', ['class' => 'fa fa-search mr-1']);
                         $this->content->text .= html_writer::link(new moodle_url($urlview,
-                                array('id' => $eport['fileitemid'], 'course' => $COURSE->id, 'tocourse' => '1')),
+                                ['id' => $eport['fileitemid'], 'course' => $COURSE->id, 'tocourse' => '1']),
                                 $eport['filename']);
                         $this->content->text .= html_writer::end_tag('p');
 
@@ -103,67 +116,67 @@ class block_eportfolio extends block_base {
                 }
                 if (!empty($mysharedeportfoliosgrade)) {
                     $this->content->text .= html_writer::tag('h6',
-                            get_string('header:mysharedeportfoliosgrade', 'block_eportfolio'), array('class' => 'mb-3'));
+                            get_string('header:mysharedeportfoliosgrade', 'block_eportfolio'), ['class' => 'mb-3']);
 
                     foreach ($mysharedeportfoliosgrade as $eport) {
 
                         if ($cm) {
-                            $params = array(
+                            $params = [
                                     'id' => $cm,
-                            );
+                            ];
                         } else {
-                            $params = array(
+                            $params = [
                                     'id' => $eport['fileitemid'],
                                     'courseid' => $eport['courseid'],
                                     'tocourse' => '1',
-                            );
+                            ];
 
                         }
 
-                        $this->content->text .= html_writer::start_tag('p', array('class' => 'pl-2'));
-                        $this->content->text .= html_writer::tag('i', '', array('class' => 'fa fa-table mr-1'));
+                        $this->content->text .= html_writer::start_tag('p', ['class' => 'pl-2']);
+                        $this->content->text .= html_writer::tag('i', '', ['class' => 'fa fa-table mr-1']);
                         $this->content->text .= html_writer::link(new moodle_url($urlmod, $params), $eport['filename']);
                         $this->content->text .= html_writer::end_tag('p');
                     }
                 }
                 if (!empty($sharedeportfolios)) {
                     $this->content->text .= html_writer::tag('h6', get_string('header:sharedeportfolios', 'block_eportfolio'),
-                            array('class' => 'mb-3'));
+                            ['class' => 'mb-3']);
 
                     foreach ($sharedeportfolios as $eport) {
 
-                        $this->content->text .= html_writer::start_tag('p', array('class' => 'pl-2'));
-                        $this->content->text .= html_writer::tag('i', '', array('class' => 'fa fa-search mr-1'));
+                        $this->content->text .= html_writer::start_tag('p', ['class' => 'pl-2']);
+                        $this->content->text .= html_writer::tag('i', '', ['class' => 'fa fa-search mr-1']);
                         $this->content->text .= html_writer::link(new moodle_url($urlview,
-                                array('id' => $eport['fileitemid'], 'course' => $COURSE->id, 'userid' => $eport['userid'],
-                                        'tocourse' => '1')), $eport['filename']);
+                                ['id' => $eport['fileitemid'], 'course' => $COURSE->id, 'userid' => $eport['userid'],
+                                        'tocourse' => '1']), $eport['filename']);
                         $this->content->text .= html_writer::end_tag('p');
                     }
                 }
                 if (!empty($sharedeportfoliosgrade)) {
                     $this->content->text .= html_writer::tag('h6',
-                            get_string('header:sharedeportfoliosgrade', 'block_eportfolio'), array('class' => 'mb-3'));
+                            get_string('header:sharedeportfoliosgrade', 'block_eportfolio'), ['class' => 'mb-3']);
 
                     foreach ($sharedeportfoliosgrade as $eport) {
 
                         if ($cm) {
-                            $params = array(
+                            $params = [
                                     'id' => $cm,
                                     'fileid' => $eport['fileidcontext'],
                                     'userid' => $eport['userid'],
                                     'action' => 'grade',
-                            );
+                            ];
                         } else {
-                            $params = array(
+                            $params = [
                                     'id' => $eport['fileidcontext'],
                                     'courseid' => $eport['courseid'],
                                     'tocourse' => '1',
-                            );
+                            ];
 
                         }
 
-                        $this->content->text .= html_writer::start_tag('p', array('class' => 'pl-2'));
-                        $this->content->text .= html_writer::tag('i', '', array('class' => 'fa fa-table mr-1'));
+                        $this->content->text .= html_writer::start_tag('p', ['class' => 'pl-2']);
+                        $this->content->text .= html_writer::tag('i', '', ['class' => 'fa fa-table mr-1']);
                         $this->content->text .= html_writer::link(new moodle_url($urlmod, $params), $eport['filename']);
                         $this->content->text .= html_writer::end_tag('p');
                     }
@@ -201,11 +214,16 @@ class block_eportfolio extends block_base {
      * @return string[] Array of pages and permissions.
      */
     public function applicable_formats() {
-        return array(
+        return [
                 'course-view' => true,
-        );
+        ];
     }
 
+    /**
+     * Multiple instances allowed for the block.
+     *
+     * @return bool
+     */
     public function instance_allow_multiple() {
         return false;
     }

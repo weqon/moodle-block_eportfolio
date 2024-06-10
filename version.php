@@ -29,6 +29,6 @@ $plugin->release = '0.1.1';
 $plugin->version = 2023102900;
 $plugin->requires = 2021051700;
 $plugin->maturity = MATURITY_RC;
-$plugin->dependencies = array(
+$plugin->dependencies = [
         'local_eportfolio' => ANY_VERSION,
-);
+];
