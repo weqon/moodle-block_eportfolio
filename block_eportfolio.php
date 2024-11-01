@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require($CFG->dirroot . '/local/eportfolio/locallib.php');
+require($CFG->dirroot . '/mod/eportfolio/locallib.php');
 
 
 /**

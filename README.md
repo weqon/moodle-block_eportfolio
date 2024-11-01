@@ -1,8 +1,6 @@
 # ePortfolio #
 
-TODO Describe the plugin shortly here.
-
-TODO Provide more detailed description here.
+This plugin is part of the ePortfolio collection and requires local_eportfolio to work.
 
 ## Installing via uploaded ZIP file ##
 
@@ -29,7 +27,7 @@ to complete the installation from the command line.
 
 ## License ##
 
-2023 weQon UG <support@weqon.net>
+2024 weQon UG <support@weqon.net>
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
