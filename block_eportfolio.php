@@ -71,6 +71,7 @@ class block_eportfolio extends block_base {
         }
 
         $this->content = new stdClass();
+        $this->content->text = '';
 
         // Check, if the current course is marked as ePortfolio course.
         $customfielddata = $DB->get_record('customfield_data', ['instanceid' => $COURSE->id]);
@@ -108,7 +109,7 @@ class block_eportfolio extends block_base {
                         $this->content->text .= html_writer::start_tag('p', ['class' => 'pl-2']);
                         $this->content->text .= html_writer::tag('i', '', ['class' => 'fa fa-search mr-1']);
                         $this->content->text .= html_writer::link(new moodle_url($urlview,
-                                ['id' => $eport['fileitemid'], 'course' => $COURSE->id, 'tocourse' => '1']),
+                                ['id' => $eport['id'], 'course' => $COURSE->id, 'tocourse' => '1']),
                                 $eport['filename']);
                         $this->content->text .= html_writer::end_tag('p');
 
@@ -126,7 +127,7 @@ class block_eportfolio extends block_base {
                             ];
                         } else {
                             $params = [
-                                    'id' => $eport['fileitemid'],
+                                    'id' => $eport['id'],
                                     'courseid' => $eport['courseid'],
                                     'tocourse' => '1',
                             ];
@@ -148,7 +149,7 @@ class block_eportfolio extends block_base {
                         $this->content->text .= html_writer::start_tag('p', ['class' => 'pl-2']);
                         $this->content->text .= html_writer::tag('i', '', ['class' => 'fa fa-search mr-1']);
                         $this->content->text .= html_writer::link(new moodle_url($urlview,
-                                ['id' => $eport['fileitemid'], 'course' => $COURSE->id, 'userid' => $eport['userid'],
+                                ['id' => $eport['id'], 'course' => $COURSE->id, 'userid' => $eport['userid'],
                                         'tocourse' => '1']), $eport['filename']);
                         $this->content->text .= html_writer::end_tag('p');
                     }
@@ -168,7 +169,7 @@ class block_eportfolio extends block_base {
                             ];
                         } else {
                             $params = [
-                                    'id' => $eport['fileidcontext'],
+                                    'id' => $eport['id'],
                                     'courseid' => $eport['courseid'],
                                     'tocourse' => '1',
                             ];
