@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - https://moodle.org/
+// This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,10 +12,10 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * ePortfolio block caps.
  *
  * @package     block_eportfolio
  * @copyright   2024 weQon UG <support@weqon.net>
@@ -24,11 +24,14 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'block_eportfolio';
-$plugin->release = '0.2.0';
-$plugin->version = 2024111800;
-$plugin->requires = 2022112800; // Moodle 4.1 Stable.
-$plugin->maturity = MATURITY_RC;
-$plugin->dependencies = [
-        'local_eportfolio' => ANY_VERSION,
+$capabilities = [
+        'block/eportfolio:addinstance' => [
+                'captype' => 'read',
+                'contextlevel' => CONTEXT_BLOCK,
+                'archetypes' => [
+                        'editingteacher' => CAP_ALLOW,
+                        'manager' => CAP_ALLOW,
+                ],
+                'clonepermissionsfrom' => 'moodle/site:manageblocks',
+        ],
 ];

@@ -31,8 +31,8 @@ $string['header:mysharedeportfolios'] = 'Von mir geteilte ePortfolios';
 $string['header:mysharedeportfoliosgrade'] = 'Von mir zur Bewertung geteilte ePortfolios';
 $string['header:sharedeportfolios'] = 'Mit mir geteilte ePortfolios';
 $string['header:sharedeportfoliosgrade'] = 'Mit mir zur Bewertung geteilte ePortfolios ';
+$string['header:sharedtemplates'] = 'ePortfolio Vorlagen';
+$string['view:eportfolio'] = 'ePortfolio anzeigen';
 
 $string['message:noeportfoliosshared'] = 'In diesem Kurs wurden noch keine ePortfolios geteilt!';
 $string['message:noeportfoliocourse'] = 'Dieser Kurs wurde nicht als ePortfolio Kurs markiert!';
-
-$string['view:portfolio:username'] = 'Geteilt von';

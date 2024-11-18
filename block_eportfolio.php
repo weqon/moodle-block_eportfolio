@@ -18,20 +18,15 @@
  * Block eportfolio is defined here.
  *
  * @package     block_eportfolio
- * @copyright   2023 weQon UG <support@weqon.net>
+ * @copyright   2024 weQon UG <support@weqon.net>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-require($CFG->dirroot . '/mod/eportfolio/locallib.php');
-
 
 /**
  * Block eportfolio is defined here.
  *
  * @package     block_eportfolio
- * @copyright   2023 weQon UG <support@weqon.net>
+ * @copyright   2024 weQon UG <support@weqon.net>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_eportfolio extends block_base {
@@ -59,7 +54,9 @@ class block_eportfolio extends block_base {
      * @return stdClass The block contents.
      */
     public function get_content() {
-        global $USER, $DB, $COURSE;
+        global $USER, $DB, $COURSE, $OUTPUT;
+
+        require_once(__DIR__ . '/locallib.php');
 
         if ($this->content !== null) {
             return $this->content;
@@ -74,121 +71,72 @@ class block_eportfolio extends block_base {
         $this->content->text = '';
 
         // Check, if the current course is marked as ePortfolio course.
-        $customfielddata = $DB->get_record('customfield_data', ['instanceid' => $COURSE->id]);
+        $sql = "SELECT cd.*
+        FROM {customfield_data} cd
+        JOIN {customfield_field} cf ON cf.id = cd.fieldid
+        WHERE cf.shortname = :shortname AND cd.instanceid = :instanceid";
 
-        if ($customfielddata->intvalue) {
+        $params = [
+                'shortname' => 'eportfolio_course',
+                'instanceid' => $COURSE->id,
+        ];
 
-            // Check if there are any ePortfolios available for this course.
-            if ($DB->get_records('local_eportfolio_share', ['courseid' => $COURSE->id])) {
+        $customfielddata = $DB->get_record_sql($sql, $params);
 
-                $urlview = '/local/eportfolio/view.php';
-                $urlmod = '/local/eportfolio/view.php'; // Default value.
-                $coursemodulecontext = '';
-
-                // Check, if there is a cm for the eportfolio mod.
-                if ($cm = get_eportfolio_cm($COURSE->id)) {
-                    // If no cm was found, all eportfolios will be for view only.
-                    $urlmod = '/mod/eportfolio/view.php';
-                    $coursemodulecontext = context_module::instance($cm);
-                }
-
-                $usercontext = context_user::instance($USER->id);
-                $courseocntext = context_course::instance($COURSE->id);
-
-                $mysharedeportfolios = get_my_shared_eportfolios($courseocntext, 'share', $COURSE->id);
-                $mysharedeportfoliosgrade = get_my_shared_eportfolios($coursemodulecontext, 'grade', $COURSE->id);
-                $sharedeportfolios = get_shared_eportfolios('share', $COURSE->id);
-                $sharedeportfoliosgrade = get_shared_eportfolios('grade', $COURSE->id);
-
-                // ToDo: Use mustache templates instead.
-                if (!empty($mysharedeportfolios)) {
-                    $this->content->text .= html_writer::tag('h6', get_string('header:mysharedeportfolios', 'block_eportfolio'),
-                            ['class' => 'mb-3']);
-
-                    foreach ($mysharedeportfolios as $eport) {
-                        $this->content->text .= html_writer::start_tag('p', ['class' => 'pl-2']);
-                        $this->content->text .= html_writer::tag('i', '', ['class' => 'fa fa-search mr-1']);
-                        $this->content->text .= html_writer::link(new moodle_url($urlview,
-                                ['id' => $eport['id'], 'course' => $COURSE->id, 'tocourse' => '1']),
-                                $eport['filename']);
-                        $this->content->text .= html_writer::end_tag('p');
-
-                    }
-                }
-                if (!empty($mysharedeportfoliosgrade)) {
-                    $this->content->text .= html_writer::tag('h6',
-                            get_string('header:mysharedeportfoliosgrade', 'block_eportfolio'), ['class' => 'mb-3']);
-
-                    foreach ($mysharedeportfoliosgrade as $eport) {
-
-                        if ($cm) {
-                            $params = [
-                                    'id' => $cm,
-                            ];
-                        } else {
-                            $params = [
-                                    'id' => $eport['id'],
-                                    'courseid' => $eport['courseid'],
-                                    'tocourse' => '1',
-                            ];
-
-                        }
-
-                        $this->content->text .= html_writer::start_tag('p', ['class' => 'pl-2']);
-                        $this->content->text .= html_writer::tag('i', '', ['class' => 'fa fa-table mr-1']);
-                        $this->content->text .= html_writer::link(new moodle_url($urlmod, $params), $eport['filename']);
-                        $this->content->text .= html_writer::end_tag('p');
-                    }
-                }
-                if (!empty($sharedeportfolios)) {
-                    $this->content->text .= html_writer::tag('h6', get_string('header:sharedeportfolios', 'block_eportfolio'),
-                            ['class' => 'mb-3']);
-
-                    foreach ($sharedeportfolios as $eport) {
-
-                        $this->content->text .= html_writer::start_tag('p', ['class' => 'pl-2']);
-                        $this->content->text .= html_writer::tag('i', '', ['class' => 'fa fa-search mr-1']);
-                        $this->content->text .= html_writer::link(new moodle_url($urlview,
-                                ['id' => $eport['id'], 'course' => $COURSE->id, 'userid' => $eport['userid'],
-                                        'tocourse' => '1']), $eport['filename']);
-                        $this->content->text .= html_writer::end_tag('p');
-                    }
-                }
-                if (!empty($sharedeportfoliosgrade)) {
-                    $this->content->text .= html_writer::tag('h6',
-                            get_string('header:sharedeportfoliosgrade', 'block_eportfolio'), ['class' => 'mb-3']);
-
-                    foreach ($sharedeportfoliosgrade as $eport) {
-
-                        if ($cm) {
-                            $params = [
-                                    'id' => $cm,
-                                    'fileid' => $eport['fileidcontext'],
-                                    'userid' => $eport['userid'],
-                                    'action' => 'grade',
-                            ];
-                        } else {
-                            $params = [
-                                    'id' => $eport['id'],
-                                    'courseid' => $eport['courseid'],
-                                    'tocourse' => '1',
-                            ];
-
-                        }
-
-                        $this->content->text .= html_writer::start_tag('p', ['class' => 'pl-2']);
-                        $this->content->text .= html_writer::tag('i', '', ['class' => 'fa fa-table mr-1']);
-                        $this->content->text .= html_writer::link(new moodle_url($urlmod, $params), $eport['filename']);
-                        $this->content->text .= html_writer::end_tag('p');
-                    }
-                }
-
-            } else {
-                $this->content->text .= get_string('message:noeportfoliosshared', 'block_eportfolio');
-            }
-
-        } else {
+        if (empty($customfielddata) && !$customfielddata->intvalue) {
+            // Check, if the course was marked as ePortfolio course.
             $this->content->text .= get_string('message:noeportfoliocourse', 'block_eportfolio');
+            return $this->content;
+        } else if (!$DB->get_records('local_eportfolio_share', ['courseid' => $COURSE->id])) {
+            // Check, if there are any ePortfolios available for this course.
+            $this->content->text .= get_string('message:noeportfoliosshared', 'block_eportfolio');
+            return $this->content;
+        }
+
+        $mysharedeportfolios = get_shared_eportfolios('share', $COURSE->id, $USER->id);
+        $mysharedeportfoliosgrade = get_shared_eportfolios('grade', $COURSE->id, $USER->id);
+        $sharedeportfolios = get_shared_eportfolios('share', $COURSE->id);
+        $sharedeportfoliosgrade = get_shared_eportfolios('grade', $COURSE->id);
+        $sharedeportfoliostemplate = get_shared_eportfolios('template', $COURSE->id);
+
+        if (!empty($mysharedeportfolios)) {
+            $templatedata = new \stdClass();
+            $templatedata->header = get_string('header:mysharedeportfolios', 'block_eportfolio');
+            $templatedata->eportfolios = $mysharedeportfolios;
+
+            $this->content->text .= $OUTPUT->render_from_template('block_eportfolio/view_eportfolios', $templatedata);
+        }
+
+        if (!empty($mysharedeportfoliosgrade)) {
+            $templatedata = new \stdClass();
+            $templatedata->header = get_string('header:mysharedeportfoliosgrade', 'block_eportfolio');
+            $templatedata->eportfolios = $mysharedeportfoliosgrade;
+
+            $this->content->text .= $OUTPUT->render_from_template('block_eportfolio/view_eportfolios', $templatedata);
+        }
+
+        if (!empty($sharedeportfolios)) {
+            $templatedata = new \stdClass();
+            $templatedata->header = get_string('header:sharedeportfolios', 'block_eportfolio');
+            $templatedata->eportfolios = $sharedeportfolios;
+
+            $this->content->text .= $OUTPUT->render_from_template('block_eportfolio/view_eportfolios', $templatedata);
+        }
+
+        if (!empty($sharedeportfoliosgrade)) {
+            $templatedata = new \stdClass();
+            $templatedata->header = get_string('header:sharedeportfoliosgrade', 'block_eportfolio');
+            $templatedata->eportfolios = $sharedeportfoliosgrade;
+
+            $this->content->text .= $OUTPUT->render_from_template('block_eportfolio/view_eportfolios', $templatedata);
+        }
+
+        if (!empty($sharedeportfoliostemplate)) {
+            $templatedata = new \stdClass();
+            $templatedata->header = get_string('header:sharedtemplates', 'block_eportfolio');
+            $templatedata->eportfolios = $sharedeportfoliostemplate;
+
+            $this->content->text .= $OUTPUT->render_from_template('block_eportfolio/view_eportfolios', $templatedata);
         }
 
         return $this->content;
@@ -200,13 +148,7 @@ class block_eportfolio extends block_base {
      * The function is called immediately after init().
      */
     public function specialization() {
-
-        // Load user defined title and make sure it's never empty.
-        if (empty($this->config->title)) {
-            $this->title = get_string('pluginname', 'block_eportfolio');
-        } else {
-            $this->title = $this->config->title;
-        }
+        return false;
     }
 
     /**
@@ -217,6 +159,7 @@ class block_eportfolio extends block_base {
     public function applicable_formats() {
         return [
                 'course-view' => true,
+                'mod*' => true,
         ];
     }
 

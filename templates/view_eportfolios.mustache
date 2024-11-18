@@ -1,0 +1,17 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h6>{{header}}</h6>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            {{#eportfolios}}
+                <a href="{{viewurl}}" title="{{title}} - {{#str}} view:eportfolio, block_eportfolio{{/str}}">
+                    {{{icon}}} {{title}}
+                </a>
+                <br>
+            {{/eportfolios}}
+        </div>
+    </div>
+</div>
