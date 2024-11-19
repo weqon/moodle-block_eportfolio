@@ -29,11 +29,11 @@ to complete the installation from the command line.
 **Version 0.2.1**
 
 - Added privacy provider class.
-- Added mustache template for displaying contet.
 
 **Version 0.2.0**
 
 - Complete code overhaul and refactoring.
+- Added mustache template for displaying content.
 
 ## License ##
 
