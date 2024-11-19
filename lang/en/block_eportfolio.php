@@ -36,3 +36,5 @@ $string['view:eportfolio'] = 'view ePortfolio';
 
 $string['message:noeportfoliosshared'] = 'No ePortfolios have been shared in this course yet!';
 $string['message:noeportfoliocourse'] = 'This course has not been marked as an ePortfolio course!';
+
+$string['privacy:metadata'] = 'The ePortfolio block only shows data stored in other locations.';
