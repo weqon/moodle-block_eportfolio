@@ -84,7 +84,8 @@ function get_shared_eportfolios($shareoption, $courseid, $userid = '') {
             if ($es->enddate != 0 && $es->enddate < $currentdate) {
                 $enddate = true;
             }
-            $eligible = '';
+
+            $eligible = false;
 
             if ($shareoption === 'grade' && !empty($userid)) {
                 // We are diyplaying shared for grading for the specific user id.
@@ -104,8 +105,8 @@ function get_shared_eportfolios($shareoption, $courseid, $userid = '') {
 
                 // If a course module exists, link to the mod view.
                 if ($shareoption === 'grade' && !empty($cm)) {
-                    $viewurl = new moodle_url('/mod/eportfolio/view.php',
-                            ['id' => $cm, 'fileid' => $es->fileidcontext]);
+                    $viewurl = new moodle_url('/mod/eportfolio/grade.php',
+                            ['id' => $cm, 'eportid' => $es->id]);
 
                     $data->icon = $OUTPUT->pix_icon('e/table', '');
                 }

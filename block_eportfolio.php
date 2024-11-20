@@ -83,7 +83,7 @@ class block_eportfolio extends block_base {
 
         $customfielddata = $DB->get_record_sql($sql, $params);
 
-        if (empty($customfielddata) && !$customfielddata->intvalue) {
+        if (empty($customfielddata) || !$customfielddata->intvalue) {
             // Check, if the course was marked as ePortfolio course.
             $this->content->text .= get_string('message:noeportfoliocourse', 'block_eportfolio');
             return $this->content;
