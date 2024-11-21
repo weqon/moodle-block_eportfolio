@@ -90,6 +90,9 @@ function get_shared_eportfolios($shareoption, $courseid, $userid = '') {
             if ($shareoption === 'grade' && !empty($userid)) {
                 // We are diyplaying shared for grading for the specific user id.
                 $eligible = true;
+            } else if (!empty($userid)) {
+                // We are diyplaying shared ePortfolios for the specific user id.
+                $eligible = true;
             } else {
                 $eligible = check_eligible($courseid, $es->fullcourse, $es->roles, $es->enrolled, $es->coursegroups);
             }
