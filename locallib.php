@@ -52,19 +52,19 @@ function get_shared_eportfolios($shareoption, $courseid, $userid = '') {
         }
     }
 
-    $sql = "SELECT * FROM {local_eportfolio_share} WHERE shareoption = ? AND courseid = ?";
+    $sql = "SELECT * FROM {local_eportfolio_share} WHERE shareoption = :shareoption AND courseid = :courseid";
 
     $params = [
-            'shareoption' => $shareoption,
-            'courseid' => $courseid,
+            'shareoption' => (string) $shareoption,
+            'courseid' => (int) $courseid,
     ];
 
     if (!empty($userid)) {
-        $sql .= " AND usermodified = ?";
-        $params['usermodified'] = $userid;
+        $sql .= " AND usermodified = :usermodified";
+        $params['usermodified'] = (int) $userid;
     } else if ($shareoption != 'template') {
-        $sql .= " AND usermodified NOT LIKE ?";
-        $params['usermodified'] = $USER->id;
+        $sql .= " AND usermodified <> :usermodified";
+        $params['usermodified'] = (int) $USER->id;
     }
 
     $eportfoliosshare = $DB->get_records_sql($sql, $params);
@@ -140,11 +140,11 @@ function check_gradingteacher_role($roleid, $coursecontextid) {
     global $DB, $USER;
 
     // Just return course where the user has the specified role assigned.
-    $sql = "SELECT * FROM {role_assignments} WHERE contextid = ? AND userid = ? AND roleid = ?";
+    $sql = "SELECT * FROM {role_assignments} WHERE contextid = :contextid AND userid = :userid AND roleid = :roleid";
     $params = [
-            'contextid' => $coursecontextid,
-            'userid' => $USER->id,
-            'roleid' => $roleid,
+            'contextid' => (int) $coursecontextid,
+            'userid' => (int) $USER->id,
+            'roleid' => (int) $roleid,
     ];
 
     $getrole = $DB->get_record_sql($sql, $params);
@@ -270,11 +270,11 @@ function get_eportfolio_cm($courseid) {
         FROM {modules} m
         JOIN {course_modules} cm
         ON m.id = cm.module
-        WHERE cm.course = ? AND m.name = ?";
+        WHERE cm.course = :cmcourse AND m.name = :mname";
 
     $params = [
-            'cm.course' => $courseid,
-            'm.name' => 'eportfolio',
+            'cmcourse' => (int) $courseid,
+            'mname' => 'eportfolio',
     ];
 
     $coursemodule = $DB->get_record_sql($sql, $params);
@@ -298,4 +298,3 @@ function get_eportfolio_cm($courseid) {
         }
     }
 }
-
