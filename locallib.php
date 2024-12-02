@@ -22,6 +22,8 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Renders HTML to display shared eportfolios
  *
@@ -30,7 +32,7 @@
  * @param int $userid
  * @return string
  */
-function get_shared_eportfolios($shareoption, $courseid, $userid = '') {
+function block_eportfolio_get_shared_eportfolios($shareoption, $courseid, $userid = '') {
     global $DB, $USER, $OUTPUT;
 
     // Only display eportfolios for grading if current user is enrolled as grading teacher.
@@ -41,7 +43,7 @@ function get_shared_eportfolios($shareoption, $courseid, $userid = '') {
         $isgradingteacher = false;
 
         foreach ($gradingroles as $gr) {
-            $check = check_gradingteacher_role($gr, $coursecontext->id);
+            $check = block_eportfolio_check_gradingteacher_role($gr, $coursecontext->id);
             if ($check) {
                 $isgradingteacher = true;
             }
@@ -70,7 +72,7 @@ function get_shared_eportfolios($shareoption, $courseid, $userid = '') {
     $eportfoliosshare = $DB->get_records_sql($sql, $params);
 
     // Check, if there is a cm for the eportfolio mod.
-    $cm = get_eportfolio_cm($courseid);
+    $cm = block_eportfolio_get_eportfolio_cm($courseid);
 
     if (!empty($eportfoliosshare)) {
 
@@ -94,7 +96,7 @@ function get_shared_eportfolios($shareoption, $courseid, $userid = '') {
                 // We are diyplaying shared ePortfolios for the specific user id.
                 $eligible = true;
             } else {
-                $eligible = check_eligible($courseid, $es->fullcourse, $es->roles, $es->enrolled, $es->coursegroups);
+                $eligible = block_eportfolio_check_eligible($courseid, $es->fullcourse, $es->roles, $es->enrolled, $es->coursegroups);
             }
 
             if (!$enddate && $eligible) {
@@ -115,7 +117,7 @@ function get_shared_eportfolios($shareoption, $courseid, $userid = '') {
                 }
 
                 $data->id = $es->id;
-                $data->title = (!empty($es->title)) ? $es->title : get_h5p_title($es->h5pid);
+                $data->title = (!empty($es->title)) ? $es->title : block_eportfolio_get_h5p_title($es->h5pid);
                 $data->fileidcontext = $es->fileidcontext;
                 $data->viewurl = $viewurl->out(false);
 
@@ -136,7 +138,7 @@ function get_shared_eportfolios($shareoption, $courseid, $userid = '') {
  * @param int $coursecontextid
  * @return bool
  */
-function check_gradingteacher_role($roleid, $coursecontextid) {
+function block_eportfolio_check_gradingteacher_role($roleid, $coursecontextid) {
     global $DB, $USER;
 
     // Just return course where the user has the specified role assigned.
@@ -166,7 +168,7 @@ function check_gradingteacher_role($roleid, $coursecontextid) {
  * @param array $coursegroups
  * @return bool
  */
-function check_eligible($courseid, $fullcourse, $roles, $enrolled, $coursegroups) {
+function block_eportfolio_check_eligible($courseid, $fullcourse, $roles, $enrolled, $coursegroups) {
     global $DB, $USER;
 
     // Siteadmins should always be eligible.
@@ -225,7 +227,7 @@ function check_eligible($courseid, $fullcourse, $roles, $enrolled, $coursegroups
  * @param int $id
  * @return void
  */
-function get_h5p_title($id) {
+function block_eportfolio_get_h5p_title($id) {
     global $DB;
 
     $h5pfile = $DB->get_record('h5p', ['id' => $id]);
@@ -254,7 +256,7 @@ function get_h5p_title($id) {
  * @param int $courseid
  * @return false|void
  */
-function get_eportfolio_cm($courseid) {
+function block_eportfolio_get_eportfolio_cm($courseid) {
     global $DB;
 
     // First check, if the eportfolio activity is available and enabled.

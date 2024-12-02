@@ -24,6 +24,8 @@
 
 namespace block_eportfolio\privacy;
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Privacy Subsystem for block_eportfolio implementing null_provider.
  *

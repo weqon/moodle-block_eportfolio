@@ -27,6 +27,5 @@
  * Custom uninstallation procedure.
  */
 function xmldb_block_eportfolio_uninstall() {
-
     return true;
 }

@@ -93,11 +93,11 @@ class block_eportfolio extends block_base {
             return $this->content;
         }
 
-        $mysharedeportfolios = get_shared_eportfolios('share', $COURSE->id, $USER->id);
-        $mysharedeportfoliosgrade = get_shared_eportfolios('grade', $COURSE->id, $USER->id);
-        $sharedeportfolios = get_shared_eportfolios('share', $COURSE->id);
-        $sharedeportfoliosgrade = get_shared_eportfolios('grade', $COURSE->id);
-        $sharedeportfoliostemplate = get_shared_eportfolios('template', $COURSE->id);
+        $mysharedeportfolios = block_eportfolio_get_shared_eportfolios('share', $COURSE->id, $USER->id);
+        $mysharedeportfoliosgrade = block_eportfolio_get_shared_eportfolios('grade', $COURSE->id, $USER->id);
+        $sharedeportfolios = block_eportfolio_get_shared_eportfolios('share', $COURSE->id);
+        $sharedeportfoliosgrade = block_eportfolio_get_shared_eportfolios('grade', $COURSE->id);
+        $sharedeportfoliostemplate = block_eportfolio_get_shared_eportfolios('template', $COURSE->id);
 
         if (!empty($mysharedeportfolios)) {
             $templatedata = new \stdClass();
@@ -159,7 +159,7 @@ class block_eportfolio extends block_base {
     public function applicable_formats() {
         return [
                 'course-view' => true,
-                'mod*' => true,
+                'mod-*' => true,
         ];
     }
 
