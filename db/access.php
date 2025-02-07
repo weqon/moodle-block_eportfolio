@@ -34,4 +34,13 @@ $capabilities = [
                 ],
                 'clonepermissionsfrom' => 'moodle/site:manageblocks',
         ],
+        'block/eportfolio:myaddinstance' => [
+                'riskbitmask'  => RISK_PERSONAL,
+                'captype'      => 'read',
+                'contextlevel' => CONTEXT_SYSTEM,
+                'archetypes'   => [
+                        'user' => CAP_ALLOW,
+                ],
+                'clonepermissionsfrom' => 'moodle/my:manageblocks',
+        ],
 ];

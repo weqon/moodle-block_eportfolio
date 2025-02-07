@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
  * @param int $userid
  * @return string
  */
-function block_eportfolio_get_shared_eportfolios($shareoption, $courseid, $userid = '') {
+function block_eportfolio_get_shared_eportfolios($shareoption, $courseid, $userid = null) {
     global $DB, $USER, $OUTPUT;
 
     // Only display eportfolios for grading if current user is enrolled as grading teacher.
@@ -96,7 +96,8 @@ function block_eportfolio_get_shared_eportfolios($shareoption, $courseid, $useri
                 // We are diyplaying shared ePortfolios for the specific user id.
                 $eligible = true;
             } else {
-                $eligible = block_eportfolio_check_eligible($courseid, $es->fullcourse, $es->roles, $es->enrolled, $es->coursegroups);
+                $eligible =
+                        block_eportfolio_check_eligible($courseid, $es->fullcourse, $es->roles, $es->enrolled, $es->coursegroups);
             }
 
             if (!$enddate && $eligible) {
@@ -163,9 +164,9 @@ function block_eportfolio_check_gradingteacher_role($roleid, $coursecontextid) {
  *
  * @param int $courseid
  * @param int $fullcourse
- * @param array $roles
- * @param array $enrolled
- * @param array $coursegroups
+ * @param string $roles
+ * @param string $enrolled
+ * @param string $coursegroups
  * @return bool
  */
 function block_eportfolio_check_eligible($courseid, $fullcourse, $roles, $enrolled, $coursegroups) {

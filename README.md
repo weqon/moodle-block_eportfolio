@@ -26,6 +26,13 @@ Alternatively, you can run
 to complete the installation from the command line.
 
 ## Relase notes ##
+
+**Version 0.2.2**
+
+- Fixed PHPDoc inconsistency.
+- Fixed namespace collisions.
+- Added required capability and missing translation. 
+
 **Version 0.2.1**
 
 - Added privacy provider class.
