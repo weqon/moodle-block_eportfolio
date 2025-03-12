@@ -27,11 +27,20 @@ to complete the installation from the command line.
 
 ## Relase notes ##
 
+**Upcoming**
+
+- Improved output of ePortfolios to maintain a clear overview, especially with a larger number of ePortfolios
+
+**Version 0.2.3**
+
+- Check whether multiple ePortfolio-activity instances are available in the course.
+- Restructuring output of ePortfolios.
+
 **Version 0.2.2**
 
 - Fixed PHPDoc inconsistency.
 - Fixed namespace collisions.
-- Added required capability and missing translation. 
+- Added required capability and missing translation.
 
 **Version 0.2.1**
 
@@ -53,7 +62,7 @@ version.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
-this program.  If not, see <https://www.gnu.org/licenses/>.
+this program. If not, see <https://www.gnu.org/licenses/>.

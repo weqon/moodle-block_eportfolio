@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'ePortfolio';
+$string['pluginname'] = 'ePortfolio - Übersicht';
 
 $string['header:mysharedeportfolios'] = 'Von mir geteilte ePortfolios';
 $string['header:mysharedeportfoliosgrade'] = 'Von mir zur Bewertung geteilte ePortfolios';
@@ -33,9 +33,11 @@ $string['header:sharedeportfolios'] = 'Mit mir geteilte ePortfolios';
 $string['header:sharedeportfoliosgrade'] = 'Mit mir zur Bewertung geteilte ePortfolios ';
 $string['header:sharedtemplates'] = 'ePortfolio Vorlagen';
 $string['view:eportfolio'] = 'ePortfolio anzeigen';
+$string['view:activtiy'] = 'Aktivität anzeigen';
 
 $string['message:noeportfoliosshared'] = 'In diesem Kurs wurden noch keine ePortfolios geteilt!';
 $string['message:noeportfoliocourse'] = 'Dieser Kurs wurde nicht als ePortfolio Kurs markiert!';
+$string['message:noeportfoliosshared:activity'] = 'In dieser Aktivität wurden noch keine ePortfolios geteilt!';
 
 $string['privacy:metadata'] = 'Der Block ePortfolio zeigt nur Daten an, die an anderen Orten gespeichert sind.';
 

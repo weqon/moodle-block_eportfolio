@@ -29,10 +29,11 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @param string $shareoption
  * @param int $courseid
+ * @param int $cmid
  * @param int $userid
- * @return string
+ * @return array
  */
-function block_eportfolio_get_shared_eportfolios($shareoption, $courseid, $userid = null) {
+function block_eportfolio_get_shared_eportfolios($shareoption, $courseid, $cmid = null, $userid = null) {
     global $DB, $USER, $OUTPUT;
 
     // Only display eportfolios for grading if current user is enrolled as grading teacher.
@@ -61,6 +62,11 @@ function block_eportfolio_get_shared_eportfolios($shareoption, $courseid, $useri
             'courseid' => (int) $courseid,
     ];
 
+    if (!empty($cmid)) {
+        $sql .= " AND cmid = :cmid";
+        $params['cmid'] = (int) $cmid;
+    }
+
     if (!empty($userid)) {
         $sql .= " AND usermodified = :usermodified";
         $params['usermodified'] = (int) $userid;
@@ -70,9 +76,6 @@ function block_eportfolio_get_shared_eportfolios($shareoption, $courseid, $useri
     }
 
     $eportfoliosshare = $DB->get_records_sql($sql, $params);
-
-    // Check, if there is a cm for the eportfolio mod.
-    $cm = block_eportfolio_get_eportfolio_cm($courseid);
 
     if (!empty($eportfoliosshare)) {
 
@@ -110,9 +113,9 @@ function block_eportfolio_get_shared_eportfolios($shareoption, $courseid, $useri
                 $data->icon = $OUTPUT->pix_icon('i/search', '');
 
                 // If a course module exists, link to the mod view.
-                if ($shareoption === 'grade' && !empty($cm)) {
+                if ($shareoption === 'grade' && !empty($cmid)) {
                     $viewurl = new moodle_url('/mod/eportfolio/grade.php',
-                            ['id' => $cm, 'eportid' => $es->id]);
+                            ['id' => $cmid, 'eportid' => $es->id]);
 
                     $data->icon = $OUTPUT->pix_icon('e/table', '');
                 }
@@ -255,7 +258,7 @@ function block_eportfolio_get_h5p_title($id) {
  * Get course module for the ePortfolio activity.
  *
  * @param int $courseid
- * @return false|void
+ * @return array
  */
 function block_eportfolio_get_eportfolio_cm($courseid) {
     global $DB;
@@ -269,7 +272,7 @@ function block_eportfolio_get_eportfolio_cm($courseid) {
 
     // Only one instance per course is allowed.
     // Get the cm ID for the eportfolio activity for the current course.
-    $sql = "SELECT cm.id
+    $sql = "SELECT cm.id, cm.instance
         FROM {modules} m
         JOIN {course_modules} cm
         ON m.id = cm.module
@@ -280,24 +283,35 @@ function block_eportfolio_get_eportfolio_cm($courseid) {
             'mname' => 'eportfolio',
     ];
 
-    $coursemodule = $DB->get_record_sql($sql, $params);
+    $coursemodules = $DB->get_records_sql($sql, $params);
 
-    if ($coursemodule) {
-        // At last but not least, let's do an availability check.
-        $modinfo = get_fast_modinfo($courseid);
-        $cm = $modinfo->get_cm($coursemodule->id);
+    $cmarr = [];
 
-        if ($cm->uservisible) {
-            // User can access the activity.
-            return $coursemodule->id;
-        } else if ($cm->availableinfo) {
-            // User cannot access the activity.
-            // But on the course page they will see a why they can't access it.
-            return false;
-        } else {
-            // User cannot access the activity.
-            return false;
+    if ($coursemodules) {
+        foreach ($coursemodules as $cmod) {
+            $cmoddata = new stdClass();
 
+            // At last but not least, let's do an availability check.
+            $modinfo = get_fast_modinfo($courseid);
+            $cm = $modinfo->get_cm($cmod->id);
+
+            if ($cm->uservisible) {
+                // User can access the activity.
+                $cmoddata->canaccess = true;
+                $cmoddata->id = $cmod->id;
+                $cmoddata->instance = $cmod->instance;
+            } else if ($cm->availableinfo) {
+                // User cannot access the activity.
+                // But on the course page they will see a why they can't access it.
+                $cmoddata->canaccess = false;
+            } else {
+                // User cannot access the activity.
+                $cmoddata->canaccess = false;
+            }
+
+            $cmarr[] = $cmoddata;
         }
     }
+
+    return $cmarr;
 }

@@ -93,10 +93,55 @@ class block_eportfolio extends block_base {
             return $this->content;
         }
 
-        $mysharedeportfolios = block_eportfolio_get_shared_eportfolios('share', $COURSE->id, $USER->id);
-        $mysharedeportfoliosgrade = block_eportfolio_get_shared_eportfolios('grade', $COURSE->id, $USER->id);
+        $this->content->text .= '<hr>';
+        
+        // Get all available CM per course.
+        $coursemodules = block_eportfolio_get_eportfolio_cm($COURSE->id);
+
+        // First output all eportfolios for grading.
+        // Second output all eportfolios for viewing.
+        // Third output all eportfolio templates.
+        foreach ($coursemodules as $cmods) {
+
+            $mysharedeportfoliosgrade = block_eportfolio_get_shared_eportfolios('grade', $COURSE->id, $cmods->id, $USER->id);
+            $sharedeportfoliosgrade = block_eportfolio_get_shared_eportfolios('grade', $COURSE->id, $cmods->id);
+
+            $getactivity = $DB->get_record('eportfolio', ['id' => $cmods->instance]);
+
+            $activtiyurl = new moodle_url('/mod/eportfolio/view.php',['id' => $cmods->id]);
+            $activitydata = new stdClass();
+            $activitydata->name = $getactivity->name;
+            $activitydata->viewurl = $activtiyurl->out(false);
+
+            $this->content->text .= $OUTPUT->render_from_template('block_eportfolio/view_activity', $activitydata);
+
+            if (!empty($mysharedeportfoliosgrade)) {
+                $templatedata = new \stdClass();
+                $templatedata->header = get_string('header:mysharedeportfoliosgrade', 'block_eportfolio');
+                $templatedata->eportfolios = $mysharedeportfoliosgrade;
+
+                $this->content->text .= $OUTPUT->render_from_template('block_eportfolio/view_eportfolios', $templatedata);
+            }
+
+            if (!empty($sharedeportfoliosgrade)) {
+                $templatedata = new \stdClass();
+                $templatedata->header = get_string('header:sharedeportfoliosgrade', 'block_eportfolio');
+                $templatedata->eportfolios = $sharedeportfoliosgrade;
+
+                $this->content->text .= $OUTPUT->render_from_template('block_eportfolio/view_eportfolios', $templatedata);
+            }
+
+            if (empty($mysharedeportfoliosgrade) && empty($sharedeportfoliosgrade)) {
+                $this->content->text .= get_string('message:noeportfoliosshared:activity', 'block_eportfolio');
+            }
+
+            $this->content->text .= '<hr>';
+        }
+
+        $this->content->text .= '<hr>';
+
+        $mysharedeportfolios = block_eportfolio_get_shared_eportfolios('share', $COURSE->id, null, $USER->id);
         $sharedeportfolios = block_eportfolio_get_shared_eportfolios('share', $COURSE->id);
-        $sharedeportfoliosgrade = block_eportfolio_get_shared_eportfolios('grade', $COURSE->id);
         $sharedeportfoliostemplate = block_eportfolio_get_shared_eportfolios('template', $COURSE->id);
 
         if (!empty($mysharedeportfolios)) {
@@ -105,14 +150,8 @@ class block_eportfolio extends block_base {
             $templatedata->eportfolios = $mysharedeportfolios;
 
             $this->content->text .= $OUTPUT->render_from_template('block_eportfolio/view_eportfolios', $templatedata);
-        }
 
-        if (!empty($mysharedeportfoliosgrade)) {
-            $templatedata = new \stdClass();
-            $templatedata->header = get_string('header:mysharedeportfoliosgrade', 'block_eportfolio');
-            $templatedata->eportfolios = $mysharedeportfoliosgrade;
-
-            $this->content->text .= $OUTPUT->render_from_template('block_eportfolio/view_eportfolios', $templatedata);
+            $this->content->text .= '<hr>';
         }
 
         if (!empty($sharedeportfolios)) {
@@ -121,14 +160,8 @@ class block_eportfolio extends block_base {
             $templatedata->eportfolios = $sharedeportfolios;
 
             $this->content->text .= $OUTPUT->render_from_template('block_eportfolio/view_eportfolios', $templatedata);
-        }
 
-        if (!empty($sharedeportfoliosgrade)) {
-            $templatedata = new \stdClass();
-            $templatedata->header = get_string('header:sharedeportfoliosgrade', 'block_eportfolio');
-            $templatedata->eportfolios = $sharedeportfoliosgrade;
-
-            $this->content->text .= $OUTPUT->render_from_template('block_eportfolio/view_eportfolios', $templatedata);
+            $this->content->text .= '<hr>';
         }
 
         if (!empty($sharedeportfoliostemplate)) {
