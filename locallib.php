@@ -81,11 +81,13 @@ function block_eportfolio_get_shared_eportfolios($shareoption, $courseid, $cmid 
 
         // Enddate reached?
         $currentdate = time();
-        $enddate = false;
 
         $datareturn = [];
 
         foreach ($eportfoliosshare as $es) {
+            // Set enddate to false.
+            $enddate = false;
+
             if ($es->enddate != 0 && $es->enddate < $currentdate) {
                 $enddate = true;
             }
@@ -128,7 +130,6 @@ function block_eportfolio_get_shared_eportfolios($shareoption, $courseid, $cmid 
                 $datareturn[] = $data;
 
             }
-
         }
 
         return $datareturn;

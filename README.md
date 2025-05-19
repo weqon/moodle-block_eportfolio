@@ -27,9 +27,9 @@ to complete the installation from the command line.
 
 ## Relase notes ##
 
-**Upcoming**
+**Version 0.2.4**
 
-- Improved output of ePortfolios to maintain a clear overview, especially with a larger number of ePortfolios
+- Bug fix reset variable for enddate.
 
 **Version 0.2.3**
 
