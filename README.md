@@ -27,6 +27,15 @@ to complete the installation from the command line.
 
 ## Relase notes ##
 
+### Moodle 4.5 ###
+
+**Version 0.2.5**
+
+- Set supported Moodle version to 4.5
+- Set maturity to stable
+
+### Moodle 4.1 ###
+
 **Version 0.2.4**
 
 - Bug fix reset variable for enddate.
