@@ -25,9 +25,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'block_eportfolio';
-$plugin->release = '0.2.5';
-$plugin->version = 2025092600;
-$plugin->requires = 2024100700; // Moodle 4.5 Stable.
+$plugin->release = '0.2.6';
+$plugin->version = 2025092800;
+$plugin->requires = 2025041400; // Moodle 5.0 Stable.
 $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = [
         'local_eportfolio' => ANY_VERSION,
