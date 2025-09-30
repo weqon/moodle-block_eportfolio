@@ -29,6 +29,10 @@ to complete the installation from the command line.
 
 ### Moodle 4.5 ###
 
+**Version 0.2.6**
+
+- Reverted required Moodle version to 4.1
+
 **Version 0.2.5**
 
 - Set supported Moodle version to 4.5
