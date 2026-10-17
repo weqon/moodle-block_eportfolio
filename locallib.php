@@ -116,7 +116,7 @@ function block_eportfolio_get_shared_eportfolios($shareoption, $courseid, $cmid 
 
                 // If a course module exists, link to the mod view.
                 if ($shareoption === 'grade' && !empty($cmid)) {
-                    $viewurl = new moodle_url('/mod/eportfolio/grade.php',
+                    $viewurl = new moodle_url('/mod/eportfolio/grading.php',
                             ['id' => $cmid, 'eportid' => $es->id]);
 
                     $data->icon = $OUTPUT->pix_icon('e/table', '');
